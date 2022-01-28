@@ -10,7 +10,9 @@
         <q-header elevated class="bg-purple">
           <q-toolbar inset>
             <q-toolbar-title>
-              <strong>Jeopardy Game</strong>
+              <router-link class="router" :to="{ name: 'startPage' }">
+                <strong>Jeopardy Game</strong>
+              </router-link>
             </q-toolbar-title>
           </q-toolbar>
           <q-toolbar inset>
@@ -73,9 +75,14 @@
           </div>
         </div>
       </q-layout>
-      <router-link :to="{ name: 'startPage' }">
-        <q-btn class="end-game" @click="logOut">End Game</q-btn>
-      </router-link>
+      <div class="btn-game-page">
+        <router-link class="router" :to="{ name: 'score' }">
+          <q-btn class="score">to Score</q-btn>
+        </router-link>
+        <router-link class="router" :to="{ name: 'startPage' }">
+          <q-btn class="score" @click="logOut">End Game</q-btn>
+        </router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -110,7 +117,13 @@ export default {
     // },
   },
   computed: {
-    ...mapGetters(["QUESTIONS", "PLAYER", "POINTS"]),
+    ...mapGetters([
+      "QUESTIONS",
+      "PLAYER",
+      "POINTS",
+      "TOTAL_TRUE",
+      "TOTAL_WRONG",
+    ]),
   },
   methods: {
     startTimer() {
@@ -130,6 +143,7 @@ export default {
     },
     stopTimer(intervalID) {
       clearInterval(intervalID);
+      this.address = "";
     },
     checkAnswer() {
       // this.answer = this.currentQuestion.answer;
@@ -157,11 +171,27 @@ export default {
       //   this.timerCount
     },
     logOut() {
+      let playerHistory = [];
+      let playersStatistics = {
+        playerH: this.PLAYER,
+        pointsH: this.POINTS,
+        trueAnswers: this.TOTAL_TRUE,
+        falseAnswers: this.TOTAL_WRONG,
+        allAnswers: this.TOTAL_TRUE + this.TOTAL_WRONG,
+      };
+      if (localStorage.getItem("history")) {
+        let raw = localStorage.getItem("history");
+        const history = JSON.parse(raw);
+        history.push(playersStatistics);
+        localStorage.setItem("history", JSON.stringify(history));
+      } else {
+        playerHistory.push(playersStatistics);
+        localStorage.setItem("history", JSON.stringify(playerHistory));
+      }
       this.clearState();
     },
 
     ...mapActions([
-      "GET_QUESTIONS",
       "setTrueAnswers",
       "setWrongAnswers",
       "setPoints",
@@ -169,9 +199,7 @@ export default {
       "clearState",
     ]),
   },
-  mounted() {
-    this.GET_QUESTIONS();
-  },
+  mounted() {},
 };
 </script>
 <style lang="scss">
@@ -203,14 +231,21 @@ export default {
   justify-content: space-around;
   align-items: center;
 }
-.end-game {
+.btn-game-page {
+  display: flex;
+  justify-content: space-between;
+  width: auto;
+  margin: 0;
+}
+.score {
   background-color: rgba(247, 29, 29, 1);
-  margin-top: 10px;
-  position: absolute;
-  bottom: 255px;
-  right: 15px;
+  margin-top: 2px;
   padding: 16px;
   border: solid 2px;
+  color: aliceblue;
+}
+.router {
+  text-decoration: none;
   color: aliceblue;
 }
 </style>

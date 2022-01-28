@@ -15,13 +15,6 @@
       <q-btn
         color="secondary"
         text-color="white"
-        label="to score"
-        @click="scorePage"
-      />
-
-      <q-btn
-        color="secondary"
-        text-color="white"
         label="let's start"
         @click="registrations"
       />
@@ -38,10 +31,11 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["setPlayer"]),
-    scorePage: () => {
-      this.$router.push("/score");
-    },
+    ...mapActions(["setPlayer", "GET_QUESTIONS"]),
+    // scorePage: function () {
+    //   this.$router.push("/score");
+    // },
+
     registrations: function () {
       if (this.player) {
         this.setPlayer(this.player);
@@ -52,6 +46,9 @@ export default {
     },
   },
   computed: {},
+  mounted() {
+    this.GET_QUESTIONS();
+  },
 };
 </script>
 <style>

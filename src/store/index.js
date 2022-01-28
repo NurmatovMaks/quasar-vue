@@ -33,7 +33,7 @@ const store = new Vuex.Store({
     async GET_QUESTIONS({ commit }) {
       let questions = [];
       try {
-        let response = await api.get(`/categories?count=5&offset=9`);
+        const response = await api.get(`/categories?count=5&offset=9`);
         response.data.forEach(async (item) => {
           let responseFromData = await api.get(`/clues?category=${item.id}`);
           questions.push({
@@ -121,6 +121,9 @@ const store = new Vuex.Store({
     },
     TOTAL_WRONG(state) {
       return state.totalWrongAnswers;
+    },
+    HISTORY(state) {
+      return state.history;
     },
   },
 

@@ -1,28 +1,52 @@
 <template>
-  <div>
+  <div class="total-score">
+    <div class="this-game">
+      <h6>This Game</h6>
+      <table class="table">
+        <thead>
+          <tr>
+            <td>Player</td>
+            <td>All Answers</td>
+            <td>True Answers</td>
+            <td>Wrong Answers</td>
+            <td>Total Points</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ PLAYER }}</td>
+            <td>{{ TOTAL_TRUE + TOTAL_WRONG }}</td>
+            <td>{{ TOTAL_TRUE }}</td>
+            <td>{{ TOTAL_WRONG }}</td>
+            <td>{{ POINTS }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <h6>History</h6>
+    <table class="table">
+      <thead>
+        <tr>
+          <td>Player</td>
+          <td>All Answers</td>
+          <td>True Answers</td>
+          <td>Wrong Answers</td>
+          <td>Total Points</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="score in history" :key="score.playerH">
+          <td>{{ score.playerH }}</td>
+          <td>{{ score.allAnswers }}</td>
+          <td>{{ score.trueAnswers }}</td>
+          <td>{{ score.falseAnswers }}</td>
+          <td>{{ score.pointsH }}</td>
+        </tr>
+      </tbody>
+    </table>
     <router-link :to="{ name: 'game' }">
-      <hr />
-      <center><h4>Back to game</h4></center>
-      <hr />
+      <button>Back to Game</button>
     </router-link>
-
-    <hr />
-    <center><h4>This Game</h4></center>
-    <hr />
-    <h3>{{ PLAYER }} набрал : {{ POINTS }}</h3>
-    <h3>Правильных ответов : {{ TOTAL_TRUE }}</h3>
-    <h3>Неправильных ответов : {{ TOTAL_WRONG }}</h3>
-
-    <hr />
-    <center><h4>История игр</h4></center>
-    <hr />
-    <!-- <div v-for="history in GET_HISTORY" :key="history">
-      <h3>Игрок {{ history.username }} набрал : {{ history.points }}</h3>
-      <h3>Правильных ответов : {{ history.currectAnswersCount }}</h3>
-      <h3>Неправильных ответов : {{ history.incorrectAnswersCount }}</h3>
-      <h3>Создано: {{ history.createdAt }}</h3>
-      <center><h4>**********</h4></center>
-    </div> -->
   </div>
 </template>
 
@@ -35,22 +59,61 @@ export default {
       history: [],
     };
   },
+
   computed: {
-    ...mapGetters(["PLAYER", "POINTS", "TOTAL_TRUE", "TOTAL_WRONG"]),
+    ...mapGetters(["PLAYER", "POINTS", "TOTAL_TRUE", "TOTAL_WRONG", "HISTORY"]),
   },
   methods: {},
   mounted() {
-    // let raw = localStorage.getItem("history");
-    // const history = JSON.parse(raw);
-    // console.log(history);
-    // this.history = history;
-    console.log(localStorage);
+    let raw = localStorage.getItem("history");
+    const history = JSON.parse(raw);
+    console.log(history);
+    this.history = history;
   },
 };
 </script>
 
 <style scoped>
-a {
-  text-decoration: none;
+.total-score {
+  margin-top: 20px;
+  /* display: flex;
+  flex-direction: column; */
+  align-items: center;
+}
+.this-game {
+  /* display: flex;
+  justify-content: space-between;
+  align-items: center; */
+}
+.table {
+  width: 100%;
+  margin-bottom: 20px;
+  border: 5px solid #fff;
+  border-top: 5px solid #fff;
+  border-bottom: 3px solid #fff;
+  border-collapse: collapse;
+  outline: 3px solid #ffd300;
+  font-size: 15px;
+  background: #fff !important;
+}
+.table th {
+  font-weight: bold;
+  padding: 7px;
+  background: #ffd300;
+  border: none;
+  text-align: left;
+  font-size: 15px;
+  border-top: 3px solid #fff;
+  border-bottom: 3px solid #ffd300;
+}
+.table td {
+  padding: 7px;
+  border: none;
+  border-top: 3px solid #fff;
+  border-bottom: 3px solid #fff;
+  font-size: 15px;
+}
+.table tbody tr:nth-child(even) {
+  background: #f8f8f8 !important;
 }
 </style>
